@@ -40,8 +40,21 @@ const fetchIssues = () => {
   const issues = JSON.parse(localStorage.getItem('issues'));
   const issuesList = document.getElementById('issuesList');
   issuesList.innerHTML = '';
+
+  totalIssueId = document.getElementById('totalIssue');
+  activeIssueId = document.getElementById('activeIssue');
+  
+  let totalIssueNumber = 0;
+  let activeIssueNumber = 0;
+  let closedIssueNumber = 0;
+
+  if(!issues.status) {
+    totalIssueId.innerText = totalIssueNumber;
+    activeIssueId.innerText = activeIssueNumber;
+  }
   
   for (var i = 0; i < issues.length; i++) {
+    console.log(issues.length)
     const {id, description, severity, assignedTo, status} = issues[i];
     if(status == 'Open') {
       issuesList.innerHTML +=   `<div class="well">
@@ -55,6 +68,8 @@ const fetchIssues = () => {
                                 </div>`;
     }
     if(status == 'Closed') {
+      closedIssueNumber++;
+
       issuesList.innerHTML +=   `<div class="well">
                                 <h6>Issue ID: ${id} </h6>
                                 <p><span class="label label-info"> ${status} </span></p>
@@ -65,6 +80,11 @@ const fetchIssues = () => {
                                 <a href="#" onclick="deleteIssue(${id})" class="btn btn-danger">Delete</a>
                                 </div>`;
     }
+
+    totalIssueNumber = issues.length;
+    totalIssueId.innerText = totalIssueNumber;
+    activeIssueNumber = totalIssueNumber - closedIssueNumber;
+    activeIssueId.innerText = activeIssueNumber;
 
   }
 }
